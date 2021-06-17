@@ -1,4 +1,6 @@
 # tablero
+import pygame
+import menu_principal
 A = 8
 
 def tablero(pantalla):
@@ -6,3 +8,9 @@ def tablero(pantalla):
     # CODIGO
     return "victoria"
     return "derrota"
+
+if __name__ == "__main__":
+    pantalla = pygame.display.set_mode()
+    tablero()
+    
+    
