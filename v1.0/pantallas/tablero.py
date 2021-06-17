@@ -1,5 +1,6 @@
 import sys
 import pygame
+import random
 
 ##############################################################################
 posicion_jugador = [0, 0]
@@ -15,6 +16,8 @@ estado_tablero[5][5] = True
 ##############################################################################
 
 def marcar_cuadrado(estado_tablero, posicion):
+    x, y=posicion
+    estado_tablero[x][y]=not estado_tablero[x][y]
     return estado_tablero
 
 def coordenadas(posicion):
@@ -29,14 +32,15 @@ def tablero(pantalla, clock):
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 tecla_presionada = pygame.key.name(event.key)
-                if tecla_presionada == "w": # ARRIBA
+                if tecla_presionada == "w" and posicion_jugador[1]>0: # ARRIBA
                     posicion_jugador[1] -= 1
-                if tecla_presionada == "s": # ABAJO
+                if tecla_presionada == "s" and posicion_jugador[1]<9: # ABAJO
                     posicion_jugador[1] += 1
-                if tecla_presionada == "a": # IZQUIERDA
+                if tecla_presionada == "a" and posicion_jugador[0]>0: # IZQUIERDA
                     posicion_jugador[0] -= 1
-                if tecla_presionada == "d": # DERECHA
+                if tecla_presionada == "d" and posicion_jugador[0]<9: # DERECHA
                     posicion_jugador[0] += 1
+                marcar_cuadrado(estado_tablero, posicion_jugador)
          
         # DIBUJO
         for i in range(10):
@@ -52,6 +56,9 @@ def tablero(pantalla, clock):
         pygame.display.flip()
         clock.tick(60)
     
+def generarObstaculos():
+    
+    return obstaculos
 
 if __name__ == "__main__":
     pygame.init()
@@ -62,5 +69,3 @@ if __name__ == "__main__":
         tablero(pantalla, clock)
     finally:
         pygame.quit()
-
-    
