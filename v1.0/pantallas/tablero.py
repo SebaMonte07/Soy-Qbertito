@@ -1,1 +1,2 @@
 # tablero
+A = 8
