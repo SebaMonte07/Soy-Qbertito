@@ -8,3 +8,4 @@ Haz click en v1.0 para entrar en la primera version del juego.
 - El programa principal va a ser la pantalla que muestra el resultado completo
 
 1. ¿Hasta donde hay que llegar en el tablero, se ponen los dibujos?
+2. ¿ Se pueden usar comando que no hemos visto en clases pero si tenemos conocimiento de su uso?
