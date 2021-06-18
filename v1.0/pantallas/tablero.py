@@ -12,7 +12,7 @@ for i in range(10):
         filas.append(False)
     estado_tablero.append(filas)
     
-estado_tablero[5][5] = True
+estado_tablero[0][0] = True
 ##############################################################################
 
 def marcar_cuadrado(estado_tablero, posicion):
@@ -25,6 +25,7 @@ def coordenadas(posicion):
     return x*50, y*50
 
 def tablero(pantalla, clock):
+    obstaculos= generarObstaculos() 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,21 +44,63 @@ def tablero(pantalla, clock):
                 marcar_cuadrado(estado_tablero, posicion_jugador)
          
         # DIBUJO
-        for i in range(10):
+        for i in range(10): #Cambio cuadraditos del tablero
             for j in range(10):
                 if estado_tablero[i][j]:
                     pygame.draw.rect(pantalla, (141, 0, 46), pygame.Rect(*coordenadas([i, j]), 50, 50))
                 else:
                     pygame.draw.rect(pantalla, (155, 225, 24), pygame.Rect(*coordenadas([i, j]), 50, 50))
+
+        for posicionObstaculo in obstaculos:
+            pygame.draw.rect(pantalla, (255, 255, 255), pygame.Rect(*coordenadas(posicionObstaculo), 50, 50)) #Obstaculo
                     
-        pygame.draw.rect(pantalla, (0, 0, 255), pygame.Rect(*coordenadas(posicion_jugador), 50, 50))
-        
+        pygame.draw.rect(pantalla, (0, 0, 255), pygame.Rect(*coordenadas(posicion_jugador), 50, 50)) #jugador
+
         #ACTUALIZACION
         pygame.display.flip()
         clock.tick(60)
     
 def generarObstaculos():
-    
+    obstaculos=[]
+    for i in range(3):
+        if i==0:
+            x= random.randint(2, 9)
+            y= random.randint(2, 9)
+            obstaculos.append([x, y])
+        elif i==1:
+            obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+            while obstaculo1 in obstaculos:
+                obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+           
+            obstaculo2= obstaculo1.copy()
+            obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+            while obstaculo2 in obstaculos:
+                obstaculo2= obstaculo1.copy()
+                obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+           
+            obstaculos+=[obstaculo1,obstaculo2]
+        else:
+            obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+            while obstaculo1 in obstaculos:
+                obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+           
+            obstaculo2= obstaculo1.copy()
+            obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+            while obstaculo2 in obstaculos:
+                obstaculo2= obstaculo1.copy()
+                obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+            
+            obstaculo3=obstaculo2.copy()
+            obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
+            while obstaculo3==obstaculo1:
+                obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
+            while obstaculo3 in obstaculos:
+                obstaculo3=obstaculo2.copy()
+                obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
+                while obstaculo3==obstaculo1:
+                    obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
+          
+            obstaculos+=[obstaculo1,obstaculo2,obstaculo3]
     return obstaculos
 
 if __name__ == "__main__":
