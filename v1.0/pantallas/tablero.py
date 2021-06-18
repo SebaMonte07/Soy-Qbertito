@@ -67,40 +67,41 @@ def generarObstaculos():
             x= random.randint(2, 9)
             y= random.randint(2, 9)
             obstaculos.append([x, y])
-        elif i==1:
-            obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-            while obstaculo1 in obstaculos:
-                obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-           
-            obstaculo2= obstaculo1.copy()
-            obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-            while obstaculo2 in obstaculos:
-                obstaculo2= obstaculo1.copy()
-                obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-           
-            obstaculos+=[obstaculo1,obstaculo2]
         else:
-            obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-            while obstaculo1 in obstaculos:
+            if i==1:
                 obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-           
-            obstaculo2= obstaculo1.copy()
-            obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-            while obstaculo2 in obstaculos:
+                while obstaculo1 in obstaculos:
+                    obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+            
                 obstaculo2= obstaculo1.copy()
                 obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+                while obstaculo2 in obstaculos:
+                    obstaculo2= obstaculo1.copy()
+                    obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
             
-            obstaculo3=obstaculo2.copy()
-            obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-            while obstaculo3==obstaculo1:
-                obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-            while obstaculo3 in obstaculos:
+                obstaculos+=[obstaculo1,obstaculo2]
+            else:
+                obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+                while obstaculo1 in obstaculos:
+                    obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
+            
+                obstaculo2= obstaculo1.copy()
+                obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+                while obstaculo2 in obstaculos:
+                    obstaculo2= obstaculo1.copy()
+                    obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
+                
                 obstaculo3=obstaculo2.copy()
                 obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
                 while obstaculo3==obstaculo1:
                     obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-          
-            obstaculos+=[obstaculo1,obstaculo2,obstaculo3]
+                while obstaculo3 in obstaculos:
+                    obstaculo3=obstaculo2.copy()
+                    obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
+                    while obstaculo3==obstaculo1:
+                        obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
+            
+                obstaculos+=[obstaculo1,obstaculo2,obstaculo3]
     return obstaculos
 
 if __name__ == "__main__":
