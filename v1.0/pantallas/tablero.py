@@ -24,6 +24,26 @@ def coordenadas(posicion):
     x, y = posicion
     return x*50, y*50
 
+def generar_obstaculos():
+    obstaculos = []
+    for i in range(3):
+        # CUADRADO CENTRAL
+        obstaculo_c = [random.randint(2, 8), random.randint(2, 8)]
+        while obstaculo_c in obstaculos:
+            obstaculo_c = [random.randint(2, 8), random.randint(2, 8)]
+        obstaculos.append(obstaculo_c)
+        
+        # CUADRADOS PERIFERICOS (largo 2 y 3)
+        for j in range(i):
+            obstaculo_p = obstaculo_c[:]
+            obstaculo_p[random.randint(0, 1)] += random.choice([-1, 1])
+            while obstaculo_p in obstaculos:
+                obstaculo_p = obstaculo_c[:]
+                obstaculo_p[random.randint(0, 1)] += random.choice([-1, 1])
+            obstaculos.append(obstaculo_p)
+        
+    return obstaculos
+
 def tablero(pantalla, clock):
     obstaculos= generarObstaculos() 
     while True:
