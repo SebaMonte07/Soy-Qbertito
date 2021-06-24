@@ -1,24 +1,34 @@
+# Integrantes
+# Cristian Cardenas Morales - 20.642.231-3
+#
+
+
 import sys
 import pygame
 import random
 
 ##############################################################################
-posicion_jugador = [0, 0] #Posicion del jugador en el tablero
 
-estado_tablero   = [] # Lista de listas que contienen el estado de cada cuadrado del tablero
-for i in range(10):
-    filas = []
-    for j in range(10):
-        filas.append(False) #False: cuadrado desactivado; True: cuadrado activado
-    estado_tablero.append(filas)
-    
-estado_tablero[0][0] = True # Posición inicial marcada
+TAMANO_CUADRADO = 75
+PADDING = 5
+
 ##############################################################################
+def generar_tablero():
+    estado_tablero   = [] # Lista de listas que contienen el estado de cada cuadrado del tablero
+    for i in range(10):
+        filas = []
+        for j in range(10):
+            filas.append(False) #False: cuadrado desactivado; True: cuadrado activado
+        estado_tablero.append(filas)
+        
+    estado_tablero[0][0] = True # Posición inicial marcada
+    
+    return estado_tablero
 
 def marcar_cuadrado(estado_tablero, posicion):
     # Activa o desactiva el cuadrado donde el jugador pasa
     x, y=posicion
-    estado_tablero[x][y]=not estado_tablero[x][y]
+    estado_tablero[x][y] = not estado_tablero[x][y]
     
     return estado_tablero
 
@@ -26,7 +36,7 @@ def coordenadas(posicion):
     #Devuelve la posición en coordenadas para la pantalla del juego (en px) 
     x, y = posicion
     
-    return x*50, y*50
+    return x*(TAMANO_CUADRADO+PADDING), y*(TAMANO_CUADRADO+PADDING) # Tamaño cuadrado + Padding
 
 def generar_obstaculos():
     # Genera 3 obstaculos de 1, 2 y 3 cuadrados; devuelve una lista que contiene la posicion en el tablero de cada cuadrado
@@ -49,8 +59,15 @@ def generar_obstaculos():
         
     return obstaculos
 
-def tablero(pantalla, clock):
+def verifica_posicion(posicion, obstaculos):
+    if posicion in obstaculos:
+        return False
+    
+    return True
+    
+def main(pantalla, clock):
     # [Inicializacion del tablero; crear funcion]
+    estado_tablero = generar_tablero()
     obstaculos = generar_obstaculos() # Inicializacion de la lista de obstaculos
     
     while True: #Bucle por cada cuadro (60 fps)
@@ -60,6 +77,8 @@ def tablero(pantalla, clock):
                 sys.exit()
             if event.type == pygame.KEYDOWN: # Boton de movimiento presionado
                 tecla_presionada = pygame.key.name(event.key)
+                posicion_anterior = posicion_jugador[:]
+                
                 if tecla_presionada == "w" and posicion_jugador[1]>0: # ARRIBA
                     posicion_jugador[1] -= 1
                 if tecla_presionada == "s" and posicion_jugador[1]<9: # ABAJO
@@ -68,77 +87,38 @@ def tablero(pantalla, clock):
                     posicion_jugador[0] -= 1
                 if tecla_presionada == "d" and posicion_jugador[0]<9: # DERECHA
                     posicion_jugador[0] += 1
+                
+                if verifica_posicion(posicion_jugador, obstaculos) and posicion_jugador != posicion_anterior: 
+                    marcar_cuadrado(estado_tablero, posicion_jugador) # Activamos o desactivamos la posicion a la que se movio el jugador
                     
-                marcar_cuadrado(estado_tablero, posicion_jugador) # Activamos o desactivamos la posicion a la que se movio el jugador
+                else:
+                    posicion_jugador[:] = posicion_anterior[:]
          
         # DIBUJO
         # Dibujado de cada estado del tablero
         for i in range(10): # Posicion x tablero
             for j in range(10): # Posicion y tablero
                 if estado_tablero[i][j]: # Cuadrado activado
-                    pygame.draw.rect(pantalla, (141, 0, 46), pygame.Rect(*coordenadas([i, j]), 50, 50))
+                    pygame.draw.rect(pantalla, "#B266FF", pygame.Rect(*coordenadas([i, j]), TAMANO_CUADRADO, TAMANO_CUADRADO))
                 else: # Cuadrado desactivado
-                    pygame.draw.rect(pantalla, (155, 225, 24), pygame.Rect(*coordenadas([i, j]), 50, 50))
+                    pygame.draw.rect(pantalla, "light blue", pygame.Rect(*coordenadas([i, j]), TAMANO_CUADRADO, TAMANO_CUADRADO))
 
         for posicionObstaculo in obstaculos:
-            pygame.draw.rect(pantalla, (255, 255, 255), pygame.Rect(*coordenadas(posicionObstaculo), 50, 50)) #Obstaculos
+            pygame.draw.rect(pantalla, "#404040", pygame.Rect(*coordenadas(posicionObstaculo), TAMANO_CUADRADO, TAMANO_CUADRADO)) #Obstaculos
                     
-        pygame.draw.rect(pantalla, (0, 0, 255), pygame.Rect(*coordenadas(posicion_jugador), 50, 50)) #jugador
+        pygame.draw.rect(pantalla, "orange", pygame.Rect(*coordenadas(posicion_jugador), TAMANO_CUADRADO, TAMANO_CUADRADO)) #jugador
 
         # ACTUALIZACION PANTALLA
         pygame.display.flip()
         clock.tick(60) # limite 60 fps
     
-def generarObstaculos():
-    obstaculos=[]
-    for i in range(3):
-        if i==0:
-            x= random.randint(2, 9)
-            y= random.randint(2, 9)
-            obstaculos.append([x, y])
-        else:
-            if i==1:
-                obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-                while obstaculo1 in obstaculos:
-                    obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-            
-                obstaculo2= obstaculo1.copy()
-                obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-                while obstaculo2 in obstaculos:
-                    obstaculo2= obstaculo1.copy()
-                    obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-            
-                obstaculos+=[obstaculo1,obstaculo2]
-            else:
-                obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-                while obstaculo1 in obstaculos:
-                    obstaculo1= [random.randint(2, 8), random.randint(2, 8)]
-            
-                obstaculo2= obstaculo1.copy()
-                obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-                while obstaculo2 in obstaculos:
-                    obstaculo2= obstaculo1.copy()
-                    obstaculo2[random.randint(0, 1)]-=random.choice([-1, 1])
-                
-                obstaculo3=obstaculo2.copy()
-                obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-                while obstaculo3==obstaculo1:
-                    obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-                while obstaculo3 in obstaculos:
-                    obstaculo3=obstaculo2.copy()
-                    obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-                    while obstaculo3==obstaculo1:
-                        obstaculo3[random.randint(0, 1)]-=random.choice([-1, 1])
-            
-                obstaculos+=[obstaculo1,obstaculo2,obstaculo3]
-    return obstaculos
-
-if __name__ == "__main__": # Verdadero solo si el programa se ejecuta desde este archivo (tablero.py)
-    pygame.init()
-    pantalla = pygame.display.set_mode((700, 500))
-    clock = pygame.time.Clock()
+# TABLERO (PROGRAMA PRINCIPAL)
+posicion_jugador = [0, 0] # Posicion del jugador en el tablero
+pygame.init()
+pantalla = pygame.display.set_mode(((TAMANO_CUADRADO+PADDING)*10, (TAMANO_CUADRADO+PADDING)*10))
+clock = pygame.time.Clock()
     
-    try:
-        tablero(pantalla, clock)
-    finally:
-        pygame.quit()
+try:
+    main(pantalla, clock)
+finally:
+    pygame.quit()
