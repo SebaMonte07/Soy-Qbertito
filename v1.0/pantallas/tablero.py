@@ -2,6 +2,8 @@
 # Cristian Cardenas Morales - 20.642.231-3
 # Felipe Córdova Vera - 20.960.184-2
 # Sebastian Cuevas Castro - 21.133.547-5
+# Luciano Espinoza Sierra - 21.071.884-2
+# Joaquin Flores Rivera - 
 
 
 import sys
