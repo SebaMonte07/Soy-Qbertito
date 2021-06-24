@@ -1,6 +1,6 @@
 # Integrantes
 # Cristian Cardenas Morales - 20.642.231-3
-#
+# Felipe Córdova Vera - 20.960.184-2
 
 
 import sys
