@@ -1,5 +1,5 @@
 #Mejores Puntajes 
-#Joaco
+#Joaco                 #faltaa kskdskdksdks
 
 import sys
 import pygame
