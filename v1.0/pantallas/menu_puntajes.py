@@ -4,7 +4,7 @@
 import sys
 import pygame
 
-escena_puntajes= pygame.image.load("c:/Users/joaco/Desktop/Carpetas/Algoritmos/Juego/Mi pantalla/fondo_puntajes.jpeg")
+escena_puntajes= pygame.image.load("imagenes/fondo_puntajes.jpeg")
 escena_puntajes= pygame.transform.scale(escena_puntajes, (650*5//3, 650))
 
 #############################################################################
