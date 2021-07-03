@@ -3,7 +3,7 @@
 import sys
 import pygame
 
-escena_instrucciones = pygame.image.load("C:/Users/usuario/Desktop/fondo_instrucciones2.jpg")
+escena_instrucciones = pygame.image.load("imagenes/fondo_instrucciones2.jpg")
 escena_instrucciones= pygame.transform.scale(escena_instrucciones,(650*5//3 , 650))
 
 def main(pantalla, clock):
