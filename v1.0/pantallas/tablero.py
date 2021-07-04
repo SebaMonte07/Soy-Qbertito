@@ -43,6 +43,7 @@ def coordenadas(posicion):
 
 def generar_obstaculos(estado_tablero):
     # Genera 3 obstaculos de 1, 2 y 3 cuadrados; devuelve una lista que contiene la posicion en el tablero de cada cuadrado
+    
     obstaculos = [] #lista con la posicion de los obstaculos
     for i in range(3): 
         # CUADRADO CENTRAL
@@ -66,36 +67,58 @@ def generar_obstaculos(estado_tablero):
     return obstaculos, estado_tablero
 
 def generar_enemigos(obstaculos, numero_enemigos=2):
-    posiciones_prohibidas = obstaculos + [(0, 0), (1, 0), (0, 1)] # posiciones donde no pueden aparecer enemigos
+    # genera enemigos (2 por defecto) con posicion aleatoria en el tablero
+    
+    posiciones_prohibidas = obstaculos + [[0, 0], [1, 0], [0, 1]] # posiciones donde no pueden aparecer enemigos
     enemigos = []
+    
     for i in range(numero_enemigos):
         x = random.randint(0, 9)
         y = random.randint(0, 9)
         
-        while (x, y) in posiciones_prohibidas:
-            x = random.randint(2, 9)
-            y = random.randint(2, 9)
+        while [x, y] in posiciones_prohibidas: # validacion: el enemigo no esta en un obstaculo o en una posicion protegida
+            x = random.randint(0, 9)
+            y = random.randint(0, 9)
             
-        posiciones_prohibidas += (x, y)
+        posiciones_prohibidas.append([x, y]) # protegemos la posicion del enemigo, así no se sobreponen
         enemigos.append([x, y])
     
     return enemigos
 
 def mover_enemigos(enemigos, obstaculos):
-    enemigo1, enemigo2 = enemigos 
+    
+    # Mueve a los enemigos en el tablero.
+    # Para evitar bucles infinitos con enemigos atrapados, itera solo en los 4 movimientos posibles (aleatoriamente)
+    # Así, un enemigo bloqueado queda en su misma ubicacion.
+    
     posiciones_prohibidas = obstaculos[:]
-    posiciones_prohibidas.append((0, 0))
+    posiciones_prohibidas.append([0, 0]) # posiciones especificas donde no pueden moverse los enemigos
+    posibles_movimientos = [(0, -1), (0, 1), (1, -1), (1, 1)] # ( indice: vertical-horizontal , sentido de la direccion)
     
-    indice = random.randint(0, 1)
-    enemigo1[indice] += random.choice((-1, 1))
-    anterior1 = enemigo1[:]
-    
-    while enemigo1[0] < 0 or enemigo1[1] > 9:
-        enemigo1[:] = anterior1[:]
-        indice = random.randint(0, 1)
-        enemigo1[indice] += random.choice((-1, 1))
+    for i, enemigo in enumerate(enemigos): # iteramos por cada enemigo y su respectiva posicion (i) en la lista
+        posicion_anterior = enemigo[:] 
+        
+        random.shuffle(posibles_movimientos) # barajamos la lista, con tal de mantener un movimiento aleatorio
+        
+        for indice, movimiento in posibles_movimientos:
+            enemigo[indice] += movimiento # realizacion del movimiento
             
-    return [enemigo1, enemigo2]
+            if enemigo[0] < 0 or enemigo[1] < 0 or enemigo[0] > 9 or enemigo[1] > 9: # esta dentro del tablero
+                enemigo[:] = posicion_anterior[:]
+            
+            elif enemigo in posiciones_prohibidas: # no esta en un obstaculo o en la posicion protegida
+                enemigo[:] = posicion_anterior[:]
+                
+            elif enemigo in enemigos[:i]: # no se sobrepone con un enemigo que ya se movio
+                enemigo[:] = posicion_anterior[:]
+                
+            elif enemigo in enemigos[i+1:]: # no se sobrepone con algun otro enemigo, que tal vez este bloqueado
+                enemigo[:] = posicion_anterior[:]
+                
+            else: # posicion disponible, deja de buscar
+                break
+        
+    return enemigos
             
 
 def verifica_posicion(posicion, obstaculos):
