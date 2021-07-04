@@ -9,7 +9,7 @@ pantalla = pygame.display.set_mode((650*5//3, 650))
 clock = pygame.time.Clock()
 
 def qbertito(pantalla, clock):
-    pantalla_actual = "instrucciones"
+    pantalla_actual = "menu_principal"
     
     while True:
         if pantalla_actual == "menu_principal":
