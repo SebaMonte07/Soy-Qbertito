@@ -13,7 +13,7 @@ def qbertito(pantalla, clock):
     
     while True:
         if pantalla_actual == "menu_principal":
-            break
+            pantalla_actual = menu_principal.menu_principal(pantalla, clock)
         
         elif pantalla_actual == "instrucciones":
             pantalla_actual = instrucciones.main(pantalla, clock)
