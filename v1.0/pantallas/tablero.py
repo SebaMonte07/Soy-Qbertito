@@ -41,7 +41,7 @@ def coordenadas(posicion):
     
     return x*(TAMANO_CUADRADO+PADDING), y*(TAMANO_CUADRADO+PADDING) # Tamaño cuadrado + Padding
 
-def generar_obstaculos():
+def generar_obstaculos(estado_tablero):
     # Genera 3 obstaculos de 1, 2 y 3 cuadrados; devuelve una lista que contiene la posicion en el tablero de cada cuadrado
     obstaculos = [] #lista con la posicion de los obstaculos
     for i in range(3): 
@@ -60,7 +60,43 @@ def generar_obstaculos():
                 obstaculo_p[random.randint(0, 1)] += random.choice([-1, 1])
             obstaculos.append(obstaculo_p)
         
-    return obstaculos
+    for posx, posy in obstaculos:
+        estado_tablero[posx][posy] = True
+        
+    return obstaculos, estado_tablero
+
+def generar_enemigos(obstaculos, numero_enemigos=2):
+    posiciones_prohibidas = obstaculos + [(0, 0), (1, 0), (0, 1)] # posiciones donde no pueden aparecer enemigos
+    enemigos = []
+    for i in range(numero_enemigos):
+        x = random.randint(0, 9)
+        y = random.randint(0, 9)
+        
+        while (x, y) in posiciones_prohibidas:
+            x = random.randint(2, 9)
+            y = random.randint(2, 9)
+            
+        posiciones_prohibidas += (x, y)
+        enemigos.append([x, y])
+    
+    return enemigos
+
+def mover_enemigos(enemigos, obstaculos):
+    enemigo1, enemigo2 = enemigos 
+    posiciones_prohibidas = obstaculos[:]
+    posiciones_prohibidas.append((0, 0))
+    
+    indice = random.randint(0, 1)
+    enemigo1[indice] += random.choice((-1, 1))
+    anterior1 = enemigo1[:]
+    
+    while enemigo1[0] < 0 or enemigo1[1] > 9:
+        enemigo1[:] = anterior1[:]
+        indice = random.randint(0, 1)
+        enemigo1[indice] += random.choice((-1, 1))
+            
+    return [enemigo1, enemigo2]
+            
 
 def verifica_posicion(posicion, obstaculos):
     if posicion in obstaculos:
@@ -70,14 +106,17 @@ def verifica_posicion(posicion, obstaculos):
     
 def main(pantalla, clock):
     # [Inicializacion del tablero; crear funcion]
+    posicion_jugador = [0, 0]
     estado_tablero = generar_tablero()
-    obstaculos = generar_obstaculos() # Inicializacion de la lista de obstaculos
+    obstaculos, estado_tablero = generar_obstaculos(estado_tablero) # Inicializacion de la lista de obstaculos
+    enemigos = generar_enemigos(obstaculos)
     
     while True: #Bucle por cada cuadro (60 fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # Boton de salida presionado
                 pygame.quit()
                 sys.exit()
+                
             if event.type == pygame.KEYDOWN: # Boton de movimiento presionado
                 tecla_presionada = pygame.key.name(event.key)
                 posicion_anterior = posicion_jugador[:]
@@ -93,12 +132,24 @@ def main(pantalla, clock):
                 
                 if verifica_posicion(posicion_jugador, obstaculos) and posicion_jugador != posicion_anterior: 
                     marcar_cuadrado(estado_tablero, posicion_jugador) # Activamos o desactivamos la posicion a la que se movio el jugador
+                    enemigos = mover_enemigos(enemigos, obstaculos)
                     
                 else:
                     posicion_jugador[:] = posicion_anterior[:]
-         
+        
+        # Validacion de victoria
+        victoria = True
+        for fila in estado_tablero:
+            for estado in fila:
+                if not estado:
+                    victoria = False
+                    
+        if victoria:
+            return "victoria"
+        
         # DIBUJO
         # Dibujado de cada estado del tablero
+        pantalla.fill("black")
         for i in range(10): # Posicion x tablero
             for j in range(10): # Posicion y tablero
                 if estado_tablero[i][j]: # Cuadrado activado
@@ -111,17 +162,21 @@ def main(pantalla, clock):
                     
         pygame.draw.rect(pantalla, "orange", pygame.Rect(*coordenadas(posicion_jugador), TAMANO_CUADRADO, TAMANO_CUADRADO)) #jugador
 
+        for posicion_enemigo in enemigos:
+            pygame.draw.rect(pantalla, "dark green", pygame.Rect(*coordenadas(posicion_enemigo), TAMANO_CUADRADO, TAMANO_CUADRADO))
+        
         # ACTUALIZACION PANTALLA
         pygame.display.flip()
         clock.tick(60) # limite 60 fps
     
 # TABLERO (PROGRAMA PRINCIPAL)
-posicion_jugador = [0, 0] # Posicion del jugador en el tablero
-pygame.init()
-pantalla = pygame.display.set_mode(((TAMANO_CUADRADO+PADDING)*10, (TAMANO_CUADRADO+PADDING)*10))
-clock = pygame.time.Clock()
-    
-try:
-    main(pantalla, clock)
-finally:
-    pygame.quit()
+if __name__ == "__main__":
+    posicion_jugador = [0, 0] # Posicion del jugador en el tablero
+    pygame.init()
+    pantalla = pygame.display.set_mode(((TAMANO_CUADRADO+PADDING)*10, (TAMANO_CUADRADO+PADDING)*10))
+    clock = pygame.time.Clock()
+        
+    try:
+        main(pantalla, clock)
+    finally:
+        pygame.quit()
