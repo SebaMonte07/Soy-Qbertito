@@ -1,7 +1,7 @@
 # Ventana principal. Programar transiciones aqui
 
 import pygame
-from pantallas import menu_principal, instrucciones, tablero, pantalla_resultados, menu_puntajes
+from pantallas import menu_principal, instrucciones, tablero, pantalla_resultados, menu_puntajes, historia
 
 pygame.init()
 
@@ -10,6 +10,8 @@ clock = pygame.time.Clock()
 
 def qbertito(pantalla, clock):
     pantalla_actual = "menu_principal"
+    puntaje = 0
+    mejores_puntajes = [0, 0, 0]
     
     while True:
         if pantalla_actual == "menu_principal":
@@ -19,19 +21,22 @@ def qbertito(pantalla, clock):
             pantalla_actual = instrucciones.main(pantalla, clock)
         
         elif pantalla_actual == "historia":
-            break
+            pantalla_actual = historia.ahz(pantalla, clock)
         
         elif pantalla_actual == "tablero":
-            pantalla_actual = tablero.main(pantalla, clock)
+            pantalla_actual, puntaje = tablero.main(pantalla, clock)
+            
+            mejores_puntajes.append(puntaje)
+            mejores_puntajes.sort(reverse=True)
+            mejores_puntajes.pop()
             
         elif pantalla_actual == "victoria":
-            pantalla_actual = pantalla_resultados.victoria(pantalla, clock)
+            pantalla_actual = pantalla_resultados.victoria(pantalla, clock, puntaje)
+            menu_puntajes.MejoresPuntajes(pantalla, clock, puntaje, mejores_puntajes)
             
         elif pantalla_actual == "derrota":
             pantalla_actual = pantalla_resultados.derrota(pantalla, clock)
             
-        elif pantalla_actual == "puntajes":
-            pantalla_actual = menu_puntajes.MejoresPuntajes(pantalla, clock)
             
 
 try:
