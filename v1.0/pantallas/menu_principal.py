@@ -23,7 +23,7 @@ def menu_principal(pantalla, clock):
                 if tecla_presionada == "return":
                     return "tablero"
                 if tecla_presionada == "i":
-                    return "instrucciones"
+                    return "historia"
 
         #DIBUJO 
         pantalla.blit(fondo_menu, (0, 0))
