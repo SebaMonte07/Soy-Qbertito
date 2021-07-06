@@ -1,4 +1,4 @@
-# Menú principal
+# MenÃº principal
 #Luciano
 
 import sys
@@ -21,8 +21,6 @@ def menu_principal(pantalla, clock):
                 tecla_presionada = pygame.key.name(event.key)
                 
                 if tecla_presionada == "return":
-                    return "tablero"
-                if tecla_presionada == "i":
                     return "historia"
 
         #DIBUJO 
