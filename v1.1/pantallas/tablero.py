@@ -189,7 +189,7 @@ def main(pantalla, clock):
     
     # Inicializacion y creación de fuentes
     
-    fuente = pygame.font.SysFont("Arial", 42, bold=True)
+    fuente = pygame.font.SysFont("Papyrus", 42, bold=True)
     
     texto_vidas = fuente.render("Vidas restantes", True, "white")
     texto_puntuacion = fuente.render("Puntuación", True, "white")
