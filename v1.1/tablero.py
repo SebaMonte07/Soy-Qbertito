@@ -20,6 +20,29 @@ pygame.mixer.init()
 
 ##############################################################################
 
+# Dialogos 
+# Lista con dialogos y su tiempo de duración
+
+dialogos_orig = [("Hola!", 3),
+                 ("Soy Qbertito!", 5),
+                 ("Ayudame a limpiar", 5),
+                 ("Quiero terminar ya!", 5),
+                 ("Para volver a casa", 5),
+                 ("Y ver a mi perro\nSteroid", 6),
+                 ("", 2),
+                 ("¿Puedo contarte de\nél?", 6),
+                 ("Lo tengo desde\npequeño", 6),
+                 ("Lo encontre matando\nun zombie...", 7),
+                 ("... a puño limpio.", 8),
+                 ("¡Es muy fuerte!", 6),
+                 ("Incluso lo pillé\npeleando...", 7),
+                 ("con 1.000.000 de\nzombies", 7),
+                 ("Le costó dos días\nacabar", 7),
+                 ("Todavía está\ncansado.", 7),
+                 ("Ahora está cuidando\nla casa.", 7),
+                 ("Tengo que verlo\npronto!!!", 10e10)
+                 ]
+
 # Imágenes 
 nombres_imagenes = ["fondo_tablero.jpg",
                     "qbertito.png",
@@ -43,18 +66,30 @@ nombres_sonidos_zombie = ["zombie1.ogg",
                           ]
 
 sonidos_zombie = utiles.cargar_sonido(nombres_sonidos_zombie)
-
 sonido_transicion_aparecer = utiles.cargar_sonido("transicion_aparecer.ogg")
-
 sonido_muerte = utiles.cargar_sonido("sonido_muerte.ogg")
-
 musica_tablero = utiles.cargar_sonido("tablero.ogg")
-
 musica_pausa = utiles.cargar_sonido("pausa.ogg")
 
 
 
 # Funciones generales
+
+def dialogo_qbertito(texto, fuente):
+    textos = texto.split("\n")
+    surf = pygame.Surface((250, 80), flags=pygame.SRCALPHA)
+    
+    alturas = [[40], [21, 59]]
+    a = len(textos)-1
+    
+    for n, t in enumerate(textos):
+        tex = fuente.render(t, True, (0, 0, 0, 255))
+        h = alturas[a][n]
+        surf.blit(tex, utiles.centro_topleft(tex, 125, h))
+        
+    
+    return surf
+    
 
 def generar_tablero():
     
@@ -213,10 +248,13 @@ def main(pantalla, clock):
     qbertito = imagenes_tablero["qbertito"].copy()
     ultima_transicion = ""
     proximo_sonido_zombie = random.randint(1, 5)*60
+    proximo_dialogo = 0
+    dialogos = iter(dialogos_orig) # genera un iterador, para ir secuencialmente
     
     # Inicializacion y creación de fuentes
     
     fuente = pygame.font.SysFont("Papyrus", 42, bold=True)
+    fuente2 = pygame.font.SysFont("Papyrus", 24, bold=True)
     
     texto_puntuacion = fuente.render("Puntuación", True, "black")
     texto_pausa = fuente.render("[P] - Pausa", True, "black")
@@ -229,7 +267,7 @@ def main(pantalla, clock):
     obstaculos, estado_tablero = generar_obstaculos(estado_tablero) # Inicializacion de la lista de obstaculos
     enemigos = generar_enemigos(obstaculos)
     
-    ultimas_transiciones_zombies = ["" for _ in range(len(enemigos))]
+    #ultimas_transiciones_zombies = ["" for _ in range(len(enemigos))]
     
     
     # Inicialización de vida y puntaje
@@ -302,6 +340,8 @@ def main(pantalla, clock):
                     
                         # Reasignamos las variables y listas de posiciones a su estado inicial
                         
+                        dialogos = iter(dialogos_orig)
+                        proximo_dialogo = 0
                         qbertito = imagenes_tablero["qbertito"].copy()
                         ultima_transicion = ""
                         proximo_sonido_zombie = random.randint(1, 5)*60
@@ -318,6 +358,8 @@ def main(pantalla, clock):
                         # reiniciamos la musica
                         
                         musica_tablero.play(-1)
+                        
+                        k = 0
                         
                         
                         # Cortamos el bucle para que no se cuente el movimiento
@@ -412,7 +454,15 @@ def main(pantalla, clock):
         for i in range(vidas): # Relleno de Surface con imagenes segun el numero de vidas
             imagen_vidas.blit(imagenes_tablero["botella"], (70*i, 0))
             
-    
+        
+        # Dialogos de Qbertito
+        if k == proximo_dialogo:
+            dialogo_actual, tiempo_espera_dialogo = next(dialogos)
+            surf_dialogo_actual = dialogo_qbertito(dialogo_actual, fuente2)
+            
+            proximo_dialogo = k + tiempo_espera_dialogo*60
+            
+            
         
         # DIBUJO
         
@@ -457,10 +507,13 @@ def main(pantalla, clock):
         
         # Dibujado de textos y vidas
         
+        
         pantalla.blit(imagen_vidas, utiles.centro_topleft(imagen_vidas, 870, 350))
         pantalla.blit(texto_puntuacion, utiles.centro_topleft(texto_puntuacion, 870, 440))
         pantalla.blit(imagen_puntuacion, utiles.centro_topleft(imagen_puntuacion, 870, 490))
         pantalla.blit(texto_pausa, (760, 540))
+        
+        pantalla.blit(surf_dialogo_actual, utiles.centro_topleft(surf_dialogo_actual, 880, 78))
         
         
         # Transicion: aparicion

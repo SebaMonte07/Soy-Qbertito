@@ -89,7 +89,7 @@ def historia(pantalla, clock):
                 tecla_presionada = pygame.key.name(event.key)
                 if tecla_presionada == "return":
                     # Termino musica menu principal e historia
-                    # 
+                    
                     pygame.mixer.stop()
                     
                     utiles.desaparecer(pantalla, clock, tiempo=1, sonido=sonido_transicion_desaparecer)
