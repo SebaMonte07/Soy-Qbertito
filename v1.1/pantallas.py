@@ -55,7 +55,7 @@ def menu_principal(pantalla, clock):
             elif event.type == pygame.KEYDOWN:
                 tecla_presionada = pygame.key.name(event.key)
                 
-                if tecla_presionada == "return":
+                if tecla_presionada == "return":     #Para pasar del menu principal a la historia
                     utiles.desaparecer(pantalla, clock, tiempo=1, sonido=sonido_transicion_desaparecer)
                     return "historia"
 
@@ -162,7 +162,7 @@ def victoria(pantalla, clock, puntuacion=100000):
     # Inicio musica victoria
     # Se termina sola o cuando se interrumpe al salir de la pantalla de puntajes
     
-    musica_victoria.play()
+    musica_victoria.play() 
     
     k = 0
     while True:
@@ -174,11 +174,11 @@ def victoria(pantalla, clock, puntuacion=100000):
             elif event.type == pygame.KEYDOWN:
                 tecla_presionada = pygame.key.name(event.key)
                 
-                if tecla_presionada == "r":
+                if tecla_presionada == "r":    #Para volver al tablero
                     utiles.desaparecer(pantalla, clock, 1, sonido_transicion_desaparecer)
                     return "tablero"
                 
-                elif tecla_presionada == "m":
+                elif tecla_presionada == "m":   #Para volver al menu principal
                     utiles.desaparecer(pantalla, clock, 1, sonido_transicion_desaparecer)
                     return "menu_principal"
                 
@@ -198,12 +198,14 @@ def victoria(pantalla, clock, puntuacion=100000):
         
         
 def derrota(pantalla, clock):
+    #Musica de derrota
+    #Se termina sola o cuando se cambia de pantalla
     
     musica_derrota.play(-1)
     
     k = 0
     while True:
-        for event in pygame.event.get():
+        for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -211,11 +213,11 @@ def derrota(pantalla, clock):
             elif event.type == pygame.KEYDOWN:
                 tecla_presionada = pygame.key.name(event.key)
                 
-                if tecla_presionada == "r":
+                if tecla_presionada == "r":    #Para volver al tablero
                     utiles.desaparecer(pantalla, clock, 1, sonido_transicion_desaparecer)
                     return "tablero"
                 
-                elif tecla_presionada == "m":
+                elif tecla_presionada == "m":    #Para volver al menu principal
                     utiles.desaparecer(pantalla, clock, 1, sonido_transicion_desaparecer)
                     return "menu_principal"
                 
@@ -242,19 +244,21 @@ def derrota(pantalla, clock):
 def mejores_puntajes(pantalla, clock, puntuacion=10000, lista=[300000,200000,100000]):
     fuente = pygame.font.SysFont("Papyrus", 60, bold=True)
     fuente2= pygame.font.SysFont("Papyrus", 42, bold=True)
-
+    #Fuente de los textos de la pantalla
+    
     texto_puntuacion = fuente.render("Puntuación:" + str(puntuacion), True, (0, 0, 0))
     texto_puntuacion2= fuente2.render("Mejores puntuaciones:", True, (0, 0, 0))
     texto_puntuacion3= fuente2.render(str(lista[0]), True, (0, 0, 0))
     texto_puntuacion4= fuente2.render(str(lista[1]), True, (0, 0, 0))
     texto_puntuacion5= fuente2.render(str(lista[2]), True, (0, 0, 0))
+    #Variables con los textos que se van a imprimir
 
     i = 0
     while True:
         i += 1
-        if i == 10*60:
+        if i == 10*60:   #Tiempo para que cambie de pantalla automaticamente
             utiles.desaparecer(pantalla, clock, 1)
-            return
+            return      
         
         texto_segundos = fuente.render(f"- {10-i//60} -", True, "white")
         
@@ -263,13 +267,13 @@ def mejores_puntajes(pantalla, clock, puntuacion=10000, lista=[300000,200000,100
                 pygame.quit()
                 sys.exit()
                 
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:  
                 utiles.desaparecer(pantalla, clock, 1, sonido_transicion_desaparecer)
                 return
 
                 
         # DIBUJO 
-        pantalla.blit(imagenes_pantallas["fondo_general"], (0, 0))
+        pantalla.blit(imagenes_pantallas["fondo_general"], (0, 0))  
         pantalla.blit(texto_puntuacion, utiles.centro_topleft(texto_puntuacion, 541, 100))
         pantalla.blit(texto_puntuacion2, utiles.centro_topleft(texto_puntuacion2, 541, 180))
         pantalla.blit(texto_puntuacion3, utiles.centro_topleft(texto_puntuacion3, 541, 260))
@@ -277,7 +281,7 @@ def mejores_puntajes(pantalla, clock, puntuacion=10000, lista=[300000,200000,100
         pantalla.blit(texto_puntuacion5, utiles.centro_topleft(texto_puntuacion5, 541, 380))
         pantalla.blit(texto_segundos, utiles.centro_topleft(texto_segundos, 541, 500))
     
-        if i == 1:
+        if i == 1:       #Validar el timepo para que cambie automaticamente cuando se acabe
             utiles.aparecer(pantalla, clock, 1, sonido_transicion_aparecer)
         clock.tick(60)
         
@@ -295,10 +299,12 @@ def mejores_puntajes(pantalla, clock, puntuacion=10000, lista=[300000,200000,100
 def pausa(pantalla, clock):
     fuente_grande = pygame.font.SysFont("Papyrus", 120)
     fuente = pygame.font.SysFont("Papyrus", 56)
+    #Fuente de los textos
     
     texto_pausa = fuente_grande.render("Pausa", True, "white")
     texto_reanudar = fuente.render("[P] - Reanudar", True, "white")
     texto_reiniciar = fuente.render("[R] - Reiniciar", True, "white")
+    #Variables con los textos a imprimir 
     
     imagen_congelada = pygame.display.get_surface() # Consigue la ultima imagen actualizada
     
@@ -315,14 +321,14 @@ def pausa(pantalla, clock):
             elif event.type == pygame.KEYDOWN:
                 tecla_presionada = pygame.key.name(event.key)
                 
-                if tecla_presionada == "p":
+                if tecla_presionada == "p": #Tecla para quitar la pausa
                     return False
                 
-                if tecla_presionada == "r":
+                if tecla_presionada == "r":   #Tecla para reiniciar la partida
                     return True
                 
         # DIBUJO 
-        pantalla.blit(imagen_congelada, (0, 0))
+        pantalla.blit(imagen_congelada, (0, 0))   
         pantalla.blit(texto_pausa, (370, 50))
         pantalla.blit(texto_reanudar, (350, 350))
         pantalla.blit(texto_reiniciar, (360, 440))
