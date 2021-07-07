@@ -336,13 +336,13 @@ def main(pantalla, clock):
                     
                     musica_pausa.play(-1)
                     
-                    reinicia = pausa(pantalla, clock) # llama al menu pausa
+                    comando = pausa(pantalla, clock) # llama al menu pausa
                     
                     # Fin de musica pausa
                     
                     musica_pausa.stop()
                     
-                    if reinicia: # verifica si se presiona [R]
+                    if comando == "reinicia": # verifica si se presiona [R]
                     
                         # Reasignamos las variables y listas de posiciones a su estado inicial
                         
@@ -372,7 +372,13 @@ def main(pantalla, clock):
                         
                         break
                     
+                    
+                    elif comando == "menu_principal": # verifica si se presiona M
+                        return "menu_principal", 0
+                    
+                    
                     pygame.mixer.unpause()
+                    
                         
                         
                 # Si el jugador realiza un movimiento válido

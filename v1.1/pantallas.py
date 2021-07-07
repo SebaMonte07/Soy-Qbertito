@@ -304,6 +304,7 @@ def pausa(pantalla, clock):
     texto_pausa = fuente_grande.render("Pausa", True, "white")
     texto_reanudar = fuente.render("[P] - Reanudar", True, "white")
     texto_reiniciar = fuente.render("[R] - Reiniciar", True, "white")
+    texto_menu_principal = fuente.render("[M] - Menú principal", True, "white")
     #Variables con los textos a imprimir 
     
     imagen_congelada = pygame.display.get_surface() # Consigue la ultima imagen actualizada
@@ -322,16 +323,20 @@ def pausa(pantalla, clock):
                 tecla_presionada = pygame.key.name(event.key)
                 
                 if tecla_presionada == "p": #Tecla para quitar la pausa
-                    return False
+                    return "reanuda"
                 
-                if tecla_presionada == "r":   #Tecla para reiniciar la partida
-                    return True
+                elif tecla_presionada == "r":   #Tecla para reiniciar la partida
+                    return "reinicia"
+                
+                elif tecla_presionada == "m":
+                    return "menu_principal"
                 
         # DIBUJO 
         pantalla.blit(imagen_congelada, (0, 0))   
         pantalla.blit(texto_pausa, (370, 50))
-        pantalla.blit(texto_reanudar, (350, 350))
-        pantalla.blit(texto_reiniciar, (360, 440))
+        pantalla.blit(texto_reanudar, utiles.centro_topleft(texto_reanudar, 541, 340))
+        pantalla.blit(texto_reiniciar, utiles.centro_topleft(texto_reiniciar, 541, 450))
+        pantalla.blit(texto_menu_principal, utiles.centro_topleft(texto_menu_principal, 541, 560))
         
         # ACTUALIZACION DE PANTALLA
         pygame.display.flip()
