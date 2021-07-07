@@ -26,12 +26,19 @@ def qbertito(pantalla, clock):
     while True:
         if pantalla_actual == "menu_principal":
             pantalla_actual = pantallas.menu_principal(pantalla, clock)
+    
         
         elif pantalla_actual == "instrucciones":
             pantalla_actual = pantallas.instrucciones(pantalla, clock)
+            
+            pygame.mixer.stop()
+            
         
         elif pantalla_actual == "historia":
             pantalla_actual = pantallas.historia(pantalla, clock)
+            
+            pygame.mixer.stop()
+            
         
         elif pantalla_actual == "tablero":
             pantalla_actual, puntaje = tablero.main(pantalla, clock)
@@ -42,12 +49,18 @@ def qbertito(pantalla, clock):
             
             pygame.mixer.stop() 
             
+            
         elif pantalla_actual == "victoria":
             pantalla_actual = pantallas.victoria(pantalla, clock, puntaje)
             pantallas.mejores_puntajes(pantalla, clock, puntaje, mejores_puntajes)
             
+            pygame.mixer.stop()
+            
+            
         elif pantalla_actual == "derrota":
             pantalla_actual = pantallas.derrota(pantalla, clock)
+            
+            pygame.mixer.stop()
             
             
 

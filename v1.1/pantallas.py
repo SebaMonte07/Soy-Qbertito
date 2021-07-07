@@ -27,6 +27,10 @@ imagenes_pantallas = utiles.cargar_imagenes(nombres_imagenes)
 
 sonido_transicion_aparecer = utiles.cargar_sonido("transicion_aparecer.ogg")
 sonido_transicion_desaparecer = utiles.cargar_sonido("transicion_desaparecer.ogg")
+musica_victoria = utiles.cargar_sonido("victoria.ogg")
+musica_menu_principal = utiles.cargar_sonido("menu_principal.ogg")
+musica_derrota = utiles.cargar_sonido("derrota.ogg")
+musica_instrucciones = utiles.cargar_sonido("instrucciones.ogg")
 
 
 
@@ -35,6 +39,12 @@ sonido_transicion_desaparecer = utiles.cargar_sonido("transicion_desaparecer.ogg
 # MENU PRINCIPAL
 
 def menu_principal(pantalla, clock):
+    
+    # inicio musica menu principal.
+    # termina al cierre de la pantalla de historia
+    
+    musica_menu_principal.play(-1)
+    
     k = 0
     while True:
         for event in pygame.event.get():
@@ -78,14 +88,18 @@ def historia(pantalla, clock):
             elif event.type == pygame.KEYDOWN:
                 tecla_presionada = pygame.key.name(event.key)
                 if tecla_presionada == "return":
-                    utiles.desaparecer(pantalla, clock, 1, sonido_transicion_desaparecer)
+                    # Termino musica menu principal e historia
+                    # 
+                    pygame.mixer.stop()
+                    
+                    utiles.desaparecer(pantalla, clock, tiempo=1, sonido=sonido_transicion_desaparecer)
                     return "instrucciones"
                 
         pantalla.blit(imagenes_pantallas["fondo_historia"], (0,0))
         
         k+=1
         if k == 1:
-            utiles.aparecer(pantalla, clock, 1, sonido_transicion_aparecer)
+            utiles.aparecer(pantalla, clock, tiempo=1, sonido=sonido_transicion_aparecer)
             
         pygame.display.flip()
         clock.tick(60)
@@ -107,6 +121,7 @@ def instrucciones(pantalla, clock):
         if i == 20*60:   #segundos para leer las instrucciones 20 seg
             utiles.desaparecer(pantalla, clock, 1)
             return "tablero"
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -121,7 +136,12 @@ def instrucciones(pantalla, clock):
         pantalla.blit(texto_segundos, (620, 35))
         
         if i == 1:
-            utiles.aparecer(pantalla, clock, 1, sonido_transicion_aparecer)
+            utiles.aparecer(pantalla, clock, tiempo=1, delay=1.5, sonido=sonido_transicion_aparecer)
+            
+            # inicio musica instrucciones
+            # termina al cambiar de pantalla
+            
+            musica_instrucciones.play()
             
         # ACTUALIZACION DE PANTALLA
         pygame.display.flip()
@@ -138,6 +158,11 @@ def instrucciones(pantalla, clock):
 def victoria(pantalla, clock, puntuacion=100000):
     fuente = pygame.font.SysFont("Papyrus", 42, bold=True)
     texto_puntuacion = fuente.render("Puntuación:" + str(puntuacion), True, (0, 0, 0))
+    
+    # Inicio musica victoria
+    # Se termina sola o cuando se interrumpe al salir de la pantalla de puntajes
+    
+    musica_victoria.play()
     
     k = 0
     while True:
@@ -173,6 +198,8 @@ def victoria(pantalla, clock, puntuacion=100000):
         
         
 def derrota(pantalla, clock):
+    
+    musica_derrota.play(-1)
     
     k = 0
     while True:

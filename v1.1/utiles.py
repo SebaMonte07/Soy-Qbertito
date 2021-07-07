@@ -63,7 +63,7 @@ def centro_topleft(surf, x, y):
 
 
 
-def aparecer(pantalla, clock, tiempo=1, sonido=None):
+def aparecer(pantalla, clock, tiempo=1, sonido=None, delay=0):
     
     # realiza una transicion de pantalla: circulo expandiendose
     
@@ -72,15 +72,21 @@ def aparecer(pantalla, clock, tiempo=1, sonido=None):
     
     radio = 0
     cambio = 632/(60*tiempo) # cambio necesario para que la transicion dure el tiempo dado
+    espera = delay*60 # espera antes de comenzar la animacion
     
     # Efecto de sonido
     
-    if not sonido is None:
+    if (not sonido is None) and delay == 0:
         sonido.play()
     
     # Bucle que dura el tiempo dado
     
-    for i in range(int(tiempo*60)):
+    for i in range(int((tiempo + delay)*60)):
+        espera = max(espera - 1, 0) # descuento de la espera
+        
+        if (not sonido is None) and espera == 1:
+            sonido.play()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # Boton de salida presionado
                 pygame.quit()
@@ -106,11 +112,14 @@ def aparecer(pantalla, clock, tiempo=1, sonido=None):
         pygame.display.flip()
         clock.tick(60)
         
-        radio = min(radio + cambio, 632) # actualizacion del radio
+        # si la espera es 0, comienza la animacion
+        
+        if espera == 0:
+            radio = min(radio + cambio, 632) # actualizacion del radio
 
 
         
-def desaparecer(pantalla, clock, tiempo=1, sonido=None):
+def desaparecer(pantalla, clock, tiempo=1, sonido=None, delay=0):
     
     # realiza una transicion de pantalla: circulo contrayendose
     
@@ -127,7 +136,7 @@ def desaparecer(pantalla, clock, tiempo=1, sonido=None):
     
     # Bucle que dura el tiempo dado
     
-    for i in range(int(tiempo*60)):
+    for i in range(int((tiempo+delay)*60)):
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # Boton de salida presionado
                 pygame.quit()

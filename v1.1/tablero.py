@@ -21,7 +21,7 @@ pygame.mixer.init()
 ##############################################################################
 
 # Imágenes 
-nombres_imagenes = ["fondo_general.jpg",
+nombres_imagenes = ["fondo_tablero.jpg",
                     "qbertito.png",
                     "zombie.png",
                     "piso_normal.jpeg",
@@ -45,6 +45,12 @@ nombres_sonidos_zombie = ["zombie1.ogg",
 sonidos_zombie = utiles.cargar_sonido(nombres_sonidos_zombie)
 
 sonido_transicion_aparecer = utiles.cargar_sonido("transicion_aparecer.ogg")
+
+sonido_muerte = utiles.cargar_sonido("sonido_muerte.ogg")
+
+musica_tablero = utiles.cargar_sonido("tablero.ogg")
+
+musica_pausa = utiles.cargar_sonido("pausa.ogg")
 
 
 
@@ -223,10 +229,17 @@ def main(pantalla, clock):
     obstaculos, estado_tablero = generar_obstaculos(estado_tablero) # Inicializacion de la lista de obstaculos
     enemigos = generar_enemigos(obstaculos)
     
+    ultimas_transiciones_zombies = ["" for _ in range(len(enemigos))]
+    
     
     # Inicialización de vida y puntaje
     vidas = 3 
     puntaje = 100000 
+    
+    
+    # musica
+    
+    musica_tablero.play(-1)
     
     
     # Bucle por cada cuadro (60 fps)
@@ -273,7 +286,17 @@ def main(pantalla, clock):
                 
                 if tecla_presionada == "p": 
                     
+                    # Inicio de musica pausa
+                    
+                    pygame.mixer.pause()
+                    
+                    musica_pausa.play(-1)
+                    
                     reinicia = pausa(pantalla, clock) # llama al menu pausa
+                    
+                    # Fin de musica pausa
+                    
+                    musica_pausa.stop()
                     
                     if reinicia: # verifica si se presiona [R]
                     
@@ -290,11 +313,18 @@ def main(pantalla, clock):
                         vidas = 3 
                         puntaje = 100000 
                         
-                        pygame.mixer.stop() # cortamos cualquier sonido que se 
+                        pygame.mixer.stop() # cortamos cualquier sonido que se esté reproduciendo
+                        
+                        # reiniciamos la musica
+                        
+                        musica_tablero.play(-1)
+                        
                         
                         # Cortamos el bucle para que no se cuente el movimiento
                         
                         break
+                    
+                    pygame.mixer.unpause()
                         
                         
                 # Si el jugador realiza un movimiento válido
@@ -311,6 +341,9 @@ def main(pantalla, clock):
                         vidas -= 1
                         posicion_jugador[:] = [0, 0]
                         
+                        # Efecto de sonido
+                        sonido_muerte.play()
+                        
                         
                     # actualización de posiciones y tablero
                         
@@ -325,6 +358,9 @@ def main(pantalla, clock):
                         vidas -= 1
                         posicion_jugador[:] = [0, 0]
                         marcar_cuadrado(estado_tablero, posicion_jugador)
+                        
+                        # Efecto de sonido
+                        sonido_muerte.play()
                     
                     
                     # Validacion de derrota
@@ -383,7 +419,7 @@ def main(pantalla, clock):
         # Fondo del tablero
         
         #pantalla.fill("black")
-        pantalla.blit(imagenes_tablero["fondo_general"], (0, 0))
+        pantalla.blit(imagenes_tablero["fondo_tablero"], (0, 0))
         
         
         # Dibujado de cada estado del tablero
@@ -421,10 +457,10 @@ def main(pantalla, clock):
         
         # Dibujado de textos y vidas
         
-        pantalla.blit(imagen_vidas, utiles.centro_topleft(imagen_vidas, 870, 80))
-        pantalla.blit(texto_puntuacion, utiles.centro_topleft(texto_puntuacion, 870, 200))
-        pantalla.blit(imagen_puntuacion, utiles.centro_topleft(imagen_puntuacion, 870, 250))
-        pantalla.blit(texto_pausa, (760, 500))
+        pantalla.blit(imagen_vidas, utiles.centro_topleft(imagen_vidas, 870, 350))
+        pantalla.blit(texto_puntuacion, utiles.centro_topleft(texto_puntuacion, 870, 440))
+        pantalla.blit(imagen_puntuacion, utiles.centro_topleft(imagen_puntuacion, 870, 490))
+        pantalla.blit(texto_pausa, (760, 540))
         
         
         # Transicion: aparicion
