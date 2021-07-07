@@ -40,10 +40,10 @@ dialogos_orig = [("Hola!", 3),
                  ("Le costó dos días\nacabar", 7),
                  ("Todavía está\ncansado.", 7),
                  ("Ahora está cuidando\nla casa.", 7),
-                 ("Tengo que verlo\npronto!!!", 10e10)
+                 ("Tengo que verlo\npronto!!!", 10e10),
                  ]
 
-# Imágenes 
+# Carga de imágenes 
 nombres_imagenes = ["fondo_tablero.jpg",
                     "qbertito.png",
                     "zombie.png",
@@ -57,7 +57,7 @@ imagenes_tablero = utiles.cargar_imagenes(nombres_imagenes)
 
 
 
-# Sonidos
+# Carga de sonidos
 
 nombres_sonidos_zombie = ["zombie1.ogg",
                           "zombie2.ogg",
@@ -76,16 +76,22 @@ musica_pausa = utiles.cargar_sonido("pausa.ogg")
 # Funciones generales
 
 def dialogo_qbertito(texto, fuente):
-    textos = texto.split("\n")
+    
+    # Convierte los dialogos de string a Surface, centrando el texto
+    # Centra los textos de 1 linea
+    # Combina y centra los textos de 2 lineas
+    # Pygame no soporta el \n
+    
+    textos = texto.split("\n") # Separa el texto cada vez que encuentra un salto de linea
     surf = pygame.Surface((250, 80), flags=pygame.SRCALPHA)
     
-    alturas = [[40], [21, 59]]
-    a = len(textos)-1
+    alturas = [[40], [21, 59]] # alturas de textos de 1 y 2 lineas, respectivamente
+    a = len(textos)-1 # indice para alturas
     
     for n, t in enumerate(textos):
         tex = fuente.render(t, True, (0, 0, 0, 255))
         h = alturas[a][n]
-        surf.blit(tex, utiles.centro_topleft(tex, 125, h))
+        surf.blit(tex, utiles.centro_topleft(tex, 125, h)) # coloca correctamente los textos
         
     
     return surf
