@@ -1,0 +1,101 @@
+# Felipe Córdova - 20.960.184-2
+# Sebastian Montecinos - 21.008.887-3
+# Rodrigo Erlandsen - 20.840.411-3
+#from turtle import *
+def main():
+    diccio_datos = validaDatos()
+    diccio_color = validaColor()
+    print(diccio_datos)
+    print(diccio_color)
+    #tipo_color, tipo_grafico = PreguntaColorYGrafico()
+    #titulo = preguntaTitulo()
+    #print("Generando gráfico...")
+    #imprimeturtle(matriz,nombre_color, tipo_color,tipo_grafico)
+
+    
+def validaDatos(): #valida el nombre del archivo, valida el formato y retorna lo que contiene el archivo en forma de diccionario
+    class Errores (Exception):
+        pass
+    class nadaOespacios (Errores):
+        pass
+    class Invalido (Errores):
+        pass
+    condicion = True
+    while(condicion):
+        try:
+            nom = input("Ingrese nombre completo del archivo: ").strip()
+            lineasDatos = {} #diccionario
+            if (len(nom) == 0):
+                raise nadaOespacios
+            else:
+                with open(nom) as archivo:
+                    for fila in archivo:
+                        fila = fila.strip("\n") 
+                        x = fila.count(',')
+                        y = fila.split(',')
+                        if(len(y) != 2):
+                            raise Invalido
+                        elif(x != 1):
+                            raise Invalido
+                        int(y[1]) 
+                        lineasDatos[y[0]] = y[1]
+                    condicion = False
+        except(FileNotFoundError):
+            print("   No existe un archivo con ese nombre, inténtelo nuevamente")
+        except(ValueError):
+            print("   El archivo no tiene el formato requerido, inténtelo nuevamente")
+        except(nadaOespacios):
+            print("   Nada ingresó, intentélo nuevamente")
+        except(Invalido):
+            print("   El archivo no tiene el formato requerido, inténtelo nuevamente")
+    return lineasDatos
+
+
+def validaColor(): ##valida el nombre del archivo para los colores, valida el formato y retorna lo que contiene el archivo en forma de diccionario
+    class Errores (Exception):
+        pass
+    class nadaOespacios (Errores):
+        pass
+    class Invalido (Errores):
+        pass
+    condicion = True
+    while(condicion):
+        try:
+            nom = input("Ingrese nombre del archivo de colores: ").strip()
+            cont = 0
+            diccio = {}
+            if (len(nom) == 0):
+                raise nadaOespacios
+            else:
+                with open(nom) as archivo:
+                    for fila in archivo:
+                        fila = fila.strip("\n")
+                        if(cont == 0):
+                            if (fila[0] != '>'):
+                                raise Invalido
+                            cont += 1
+                            y = fila
+                            diccio[fila] = ""
+                        elif(cont == 1):
+                            x = fila.split(',')
+                            for i in range(0,len(x)):
+                                num = int(str(x[i]), 16)
+                                hex(num)
+                                if(i == len(x) - 1):
+                                    diccio[y] += x[i]
+                                else:
+                                    diccio[y] += x[i] + " "
+                                cont = 0
+                    condicion = False
+        except(FileNotFoundError):
+            print("   No existe un archivo con ese nombre, inténtelo nuevamente")
+        except(ValueError):
+            print("   El archivo no tiene el formato requerido, inténtelo nuevamente")
+        except(nadaOespacios):
+            print("   Nada ingresó, intentélo nuevamente")
+        except(Invalido):
+            print("   El archivo no tiene el formato requerido, inténtelo nuevamente")
+            
+    return diccio
+
+main()
