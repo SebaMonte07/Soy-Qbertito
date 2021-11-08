@@ -1,0 +1,4 @@
+colores primarios
+ffff00,0000ff,ff0000
+>tonos azules
+cccccc,00ffff,389eb8,0000ff
