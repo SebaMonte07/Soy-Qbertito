@@ -194,7 +194,7 @@ def grafBarra(diccio,colors,titulo):#Hay que llamar a esta funcion
   t.left(90)
   t.fd(cont*65)
   t.up()
-  xtitle = (((cont-1)*65)/2)+100
+  xtitle = ((cont*65)/2)+80
   t.goto(xtitle,410)
   t.write(titulo,False,"center",font=("Verdana",13,"normal"))
 #
@@ -270,7 +270,7 @@ def grafLinea(diccio,colors,titulo):#Se llama a esta funcion para crear el grafi
   t.left(90)
   t.fd(cont*65)
   t.up()
-  xtitle = (((cont-1)*65)/2)+105 #titulo
+  xtitle = ((cont*65)/2)+90 #titulo
   t.goto(xtitle,410)
   t.write(titulo,False,"center",font=("Verdana",13,"normal"))
 #
